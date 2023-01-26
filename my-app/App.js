@@ -1,30 +1,60 @@
-import React from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React,{useState} from "react";
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Product from "./components/Product";
 
 export default function App() {
+  const [product, setProduct] = useState();
+  const [productItems, setProductItems] = useState([]);
+
+  const handleAddProduct = () =>{
+    Keyboard.dismiss();
+    setProductItems([...productItems, product]) /*Add initial items plus new one in the array */
+    setProduct(null);
+  }
   return (
     <View style={styles.background}>
      { /*starts the list from search bar*/}
       <View style={styles.listWrapper}>
-      <View style={styles.searchbar}>
-        <View>
+      <View>
+        <KeyboardAvoidingView style={styles.searchWrapper}>
         <TextInput
+          style={styles.inputbox}
           placeholder ="Search..."
+          value={product}
+          onChangeText={text =>setProduct(text)}
         />
-        </View>
-        <Ionicons name="search-outline" size={20} color={"#fff"} justify />
+        <TouchableOpacity onPress={() =>handleAddProduct()}>
+          <View style={styles.addItemWrapper}>
+            <Text style={styles.addItem}>+</Text>
+          </View>
+        </TouchableOpacity>
+        </KeyboardAvoidingView>
+        {/*<Ionicons name="search-outline" size={20} color={"#fff"} justify />*/}
       </View>
       <Text style={styles.sectionTitle}> Grocery Items </Text>
       {/*Grocery list items start*/}
-      <View style={styles.items}>
-        <Product text={'Oranges'}/>
-        <Product text={'Milk'}/> 
-      </View>
-                 
-      </View>
       
+       </View>
+      <ScrollView showsVerticalScrollIndicator={true}>
+      <View style={styles.items}>
+        {
+          productItems.map((item, index) =>{
+            return <Product key={index} text={item} />
+          })
+        }
+      </View>
+      </ScrollView>  
+
+     
+      {/*Export Button*/}
+      <TouchableOpacity>
+        <View style={styles.exportButton}>
+          
+          <Text>Export</Text>
+          
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -33,28 +63,70 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: '#E8EAED',
+    alignContent:'center'
   },
 
   listWrapper:{
     paddingTop: 80,
     paddingHorizontal: 20,
   },
-  searchbar: {
-    flexDirection:'row',
-    backgroundColor: "#999",
-    padding: 10,
-    height: 50,
-    width: "100%",
-    borderRadius: 8,
-    marginBottom: 15,
-  },
+  // searchbar: {
+  //   flexDirection:'row',
+  //   backgroundColor: "#999",
+  //   padding: 10,
+  //   height: 50,
+  //   width: "100%",
+  //   borderRadius: 8,
+  //   marginBottom: 15,
+  // },
 
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginTop:70,
   },
 
   items: {
     marginTop: 30,
+  },
+
+  exportButton:{
+    backgroundColor: '#4abf0f',
+    width:'50%',
+    alignItems:'center',
+    paddingHorizontal:20,
+    margin:20,
+    height:30,
+    justifyContent:'center',
+    borderRadius: 20,
+  },
+  searchWrapper:{
+    position:'absolute',
+    width:'100%',
+    justifyContent:'space-around',
+    flexDirection:'row',
+    alignItems: 'center'
+  },
+  inputbox:{
+    paddingVertical:10,
+    paddingHorizontal:20,
+    backgroundColor:'#999',
+    borderColor:'black',
+    borderWidth:1,
+    width:250,
+    borderRadius: 40
+    // marginBottom
+  },
+  addItemWrapper:{
+    width: 60,
+    height: 60,
+    background:'red',
+    borderRadius:60,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#888',
+  },
+  addItem:{
+
   },
 });
