@@ -2,6 +2,16 @@ import React,{useState} from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Product from "./components/Product";
+import Paho from "paho-mqtt"
+
+client = new Paho.Client(
+  "test.mosquitto.org",
+  Number(8080),
+  "G_NA"
+);
+ 
+
+client.connect();
 
 export default function App() {
   const [product, setProduct] = useState();
@@ -11,6 +21,15 @@ export default function App() {
     Keyboard.dismiss();
     setProductItems([...productItems, product]) /*Add initial items plus new one in the array */
     setProduct(null);
+  }
+
+  const publishMessage = (productItems) =>{
+    {/*JSON.stringify makes list of the array */}
+    console.log(productItems);
+    console.log(JSON.stringify(productItems));
+    message = new Paho.Message(JSON.stringify(productItems));
+    message.destinationName = "calvin-gna-test";
+    client.send(message);
   }
   return (
     <View style={styles.background}>
@@ -48,7 +67,8 @@ export default function App() {
 
      
       {/*Export Button*/}
-      <TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => console.log(JSON.stringify(productItems))}> */}
+      <TouchableOpacity onPress={() => publishMessage(productItems)}>
         <View style={styles.exportButton}>
           
           <Text>Export</Text>
@@ -70,15 +90,6 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 20,
   },
-  // searchbar: {
-  //   flexDirection:'row',
-  //   backgroundColor: "#999",
-  //   padding: 10,
-  //   height: 50,
-  //   width: "100%",
-  //   borderRadius: 8,
-  //   marginBottom: 15,
-  // },
 
   sectionTitle: {
     fontSize: 24,
