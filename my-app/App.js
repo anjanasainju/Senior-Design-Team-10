@@ -107,9 +107,10 @@ const styles = StyleSheet.create({
     alignItems:'center',
     paddingHorizontal:20,
     margin:20,
-    height:30,
+    height:40,
     justifyContent:'center',
     borderRadius: 20,
+    marginLeft:90
   },
   searchWrapper:{
     position:'absolute',
@@ -124,15 +125,15 @@ const styles = StyleSheet.create({
     backgroundColor:'#999',
     borderColor:'black',
     borderWidth:1,
-    width:250,
+    width:270,
     borderRadius: 40
     // marginBottom
   },
   addItemWrapper:{
-    width: 60,
-    height: 60,
-    background:'red',
+    width: 50,
+    height: 50,
     borderRadius:60,
+    borderWidth:1,
     justifyContent:'center',
     alignItems:'center',
     backgroundColor:'#888',
