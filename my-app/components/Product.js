@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Product = (props) => {
 
@@ -10,17 +11,19 @@ const Product = (props) => {
             </View>
             {/*Quantity */}
             <View style={styles.itemRight}>
-            <TouchableOpacity>
-                <View style={styles.quanitityWrapper}> 
+            {/* <TouchableOpacity>
+                <View style={styles.quanitityWrapper}>  */}
                 {/*make different styles for plus, minus and whole right section*/}
-                    <Text style={styles.quantity}>-</Text>
+                    {/* <Text style={styles.quantity}>-</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity>
                 <View style={styles.quanitityWrapper}>
+                   
                     <Text style={styles.quantity}>+</Text>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <Ionicons name="trash-outline" size={28} color="red" />
             </View>
             
         </View>
