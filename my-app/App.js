@@ -1,8 +1,12 @@
-import React,{useState} from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from 'react-native';
+import React,{useState, useEffect} from "react";
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard, Button} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Product from "./components/Product";
 import Paho from "paho-mqtt"
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+
 
 client = new Paho.Client(
   "test.mosquitto.org",
@@ -13,10 +17,10 @@ client = new Paho.Client(
 
 client.connect();
 
-export default function App() {
+function HomeScreen({navigation}) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
-
+  
   const handleAddProduct = () =>{
     Keyboard.dismiss();
     setProductItems([...productItems, product]) /*Add initial items plus new one in the array */
@@ -31,6 +35,7 @@ export default function App() {
     message.destinationName = "calvin-gna-test";
     client.send(message);
   }
+
   return (
     <View style={styles.background}>
      { /*starts the list from search bar*/}
@@ -64,11 +69,10 @@ export default function App() {
         }
       </View>
       </ScrollView>  
-
-     
       {/*Export Button*/}
       {/* <TouchableOpacity onPress={() => console.log(JSON.stringify(productItems))}> */}
-      <TouchableOpacity onPress={() => publishMessage(productItems)}>
+      {/* <TouchableOpacity onPress={() => publishMessage(productItems)}> */}
+      <TouchableOpacity onPress={() => navigation.navigate('QR')}>
         <View style={styles.exportButton}>
           
           <Text>Export</Text>
@@ -79,6 +83,55 @@ export default function App() {
   );
 }
 
+function QRScreen({route, navigation}) {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return (
+    <View style={styles.container}>
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+    </View>
+  );
+}
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="QR" component={QRScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+export default App;
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -87,8 +140,8 @@ const styles = StyleSheet.create({
   },
 
   listWrapper:{
-    paddingTop: 80,
-    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingHorizontal: 10,
   },
 
   sectionTitle: {
@@ -125,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#999',
     borderColor:'black',
     borderWidth:1,
-    width:270,
+    width:290,
     borderRadius: 40
     // marginBottom
   },
@@ -141,4 +194,9 @@ const styles = StyleSheet.create({
   addItem:{
 
   },
+  container:{
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  }
 });
