@@ -7,7 +7,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-
+//NEED TO WORK ON SENDING PARAM data (topic) from QR to publishMessage without changing screens
 client = new Paho.Client(
   "test.mosquitto.org",
   Number(8080),
@@ -17,10 +17,11 @@ client = new Paho.Client(
 
 client.connect();
 
-function HomeScreen({navigation}) {
+function HomeScreen({route,navigation}) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
-  
+  const topic = route.params;
+  // console.log(topic);
   const handleAddProduct = () =>{
     Keyboard.dismiss();
     setProductItems([...productItems, product]) /*Add initial items plus new one in the array */
@@ -33,6 +34,8 @@ function HomeScreen({navigation}) {
     console.log(JSON.stringify(productItems));
     message = new Paho.Message(JSON.stringify(productItems));
     message.destinationName = "calvin-gna-test";
+    console.log(topic);
+    message.destinationName = topic;
     client.send(message);
   }
 
@@ -71,7 +74,11 @@ function HomeScreen({navigation}) {
       </ScrollView>  
       {/*Export Button*/}
       {/* <TouchableOpacity onPress={() => console.log(JSON.stringify(productItems))}> */}
-      {/* <TouchableOpacity onPress={() => publishMessage(productItems)}> */}
+      <TouchableOpacity onPress={() => publishMessage(productItems)}>
+        <View>
+          <Text>send</Text>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('QR')}>
         <View style={styles.exportButton}>
           
@@ -98,9 +105,11 @@ function QRScreen({route, navigation}) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    navigation.navigate("Home",data)    
+    
   };
-
+  
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -109,6 +118,10 @@ function QRScreen({route, navigation}) {
   }
 
   return (
+    // <View>
+    // <View style={styles.container}>
+    //   <Text>Scan the QR code on the cart to send your list</Text>
+    // </View>
     <View style={styles.container}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -116,6 +129,7 @@ function QRScreen({route, navigation}) {
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
+    // </View>
   );
 }
 const Stack = createNativeStackNavigator();
@@ -198,5 +212,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
+    // height: 1000,
+    // width: 300
   }
 });
