@@ -17,11 +17,13 @@ client = new Paho.Client(
 
 client.connect();
 
+
+var topic;
+
 function HomeScreen({route,navigation}) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
-  const topic = route.params;
-  // console.log(topic);
+  
   const handleAddProduct = () =>{
     Keyboard.dismiss();
     setProductItems([...productItems, product]) /*Add initial items plus new one in the array */
@@ -29,15 +31,17 @@ function HomeScreen({route,navigation}) {
   }
 
   const publishMessage = (productItems) =>{
+    // const topic = route.params;
+    
     {/*JSON.stringify makes list of the array */}
     console.log(productItems);
-    console.log(JSON.stringify(productItems));
+    // console.log(JSON.stringify(productItems));
     message = new Paho.Message(JSON.stringify(productItems));
-    message.destinationName = "calvin-gna-test";
-    console.log(topic);
+    // message.destinationName = "calvin-gna-test";
+    console.log("topic",topic);
     message.destinationName = topic;
     client.send(message);
-  }
+  } 
 
   return (
     <View style={styles.background}>
@@ -93,6 +97,7 @@ function HomeScreen({route,navigation}) {
 function QRScreen({route, navigation}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  // const [data, setData] = useState("");
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -105,8 +110,13 @@ function QRScreen({route, navigation}) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    navigation.navigate("Home",data)    
+    // setData(data);
+    topic = data;
+    console.log("data from handle",data);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // navigation.navigate("Home",data);    
+    
+    
     
   };
   
