@@ -1,11 +1,12 @@
 import React,{useState, useEffect} from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard, Button} from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableWithoutFeedback,SafeAreaView,FlatList, Pressable, KeyboardAvoidingView, Keyboard, Button} from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Product from "./components/Product";
 import Paho from "paho-mqtt"
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import Header from "./header";
 
 //NEED TO WORK ON SENDING PARAM data (topic) from QR to publishMessage without changing screens
 client = new Paho.Client(
@@ -17,7 +18,9 @@ client = new Paho.Client(
 
 client.connect();
 
-
+const database = [
+  "Milk", "Pasta", "Rice", "Eggs", "Apples","Applesauce", "Rice Cakes"
+]
 var topic;
 
 function HomeScreen({route,navigation}) {
@@ -43,10 +46,41 @@ function HomeScreen({route,navigation}) {
     client.send(message);
   } 
 
+  const [input, setInput] = useState();
+  const [data, setData] =useState();
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  const getItemText = (item) =>{
+    return (
+      <View style={{flexDirection:'row', alignItems:'center'}}>
+        <View style={{marginLeft:15, flexShrink:1, width: 300, borderWidth:1, padding:5, backgroundColor:"green", elevation:2}}>
+          <Text>{item}</Text>
+        </View>
+
+      </View>
+    )
+  }
+  const onChangeText = (text)=>{
+    setInput(text)
+    if (text.length == 0) return setData([]);
+    
+    const result = database.filter(checkDatabase);
+    if (result.length > 0) setData(result)
+    console.log(result)
+    
+  }
+  const checkDatabase = (item) =>{
+    return item.includes(input)
+  }
+  const selectItem = (item) => {
+    setInput(item)
+  }
+
   return (
     <View style={styles.background}>
      { /*starts the list from search bar*/}
-      <View style={styles.listWrapper}>
+
+      {/* <View style={styles.listWrapper}>
       <View>
         <KeyboardAvoidingView style={styles.searchWrapper}>
         <TextInput
@@ -54,19 +88,55 @@ function HomeScreen({route,navigation}) {
           placeholder ="Search..."
           value={product}
           onChangeText={text =>setProduct(text)}
-        />
-        <TouchableOpacity onPress={() =>handleAddProduct()}>
-          <View style={styles.addItemWrapper}>
-            <Text style={styles.addItem}>+</Text>
-          </View>
-        </TouchableOpacity>
-        </KeyboardAvoidingView>
-        {/*<Ionicons name="search-outline" size={20} color={"#fff"} justify />*/}
+        /> */}
+        <View style= {{flexDirection:'row', marginTop:10}}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView>
+        {/* <Text style = {{marginLeft:12, marginVertical:5, fontSize:12}}>Search</Text> */}
+          <TextInput
+          placeholder="Search"
+          value={input}
+          onChangeText={onChangeText}
+          style={{
+            height:50,
+            marginHorizontal:12,
+            borderWidth:1,
+            paddingHorizontal:10,
+            borderRadius:5,
+            width:300
+          }}
+          />
+            <FlatList
+              data = {data}
+              style={{zIndex:99}}
+              renderItem = {({item, index}) =>(
+                <Pressable
+                  // onPress={() => alert("Item" + item)}
+                  onPress={() => selectItem(item)}
+                >
+                  {getItemText(item)}
+                </Pressable>
+              )} 
+              >
+            </FlatList>
+      </SafeAreaView>
+      
+      </TouchableWithoutFeedback>
+
+      <TouchableOpacity onPress={() =>handleAddProduct()}>
+        <View style={styles.addItemWrapper}>
+          <Text style={styles.addItem}>+</Text>
+        </View>
+      </TouchableOpacity>
       </View>
+      {/* </KeyboardAvoidingView> */}
+      {/*<Ionicons name="search-outline" size={20} color={"#fff"} justify />*/}
+      {/* </View> */}
+      <View style={{position:'absolute', zIndex:-90}}>
       <Text style={styles.sectionTitle}> Grocery Items </Text>
       {/*Grocery list items start*/}
       
-       </View>
+       {/* </View> */}
       <ScrollView showsVerticalScrollIndicator={true}>
       <View style={styles.items}>
         {
@@ -78,18 +148,20 @@ function HomeScreen({route,navigation}) {
       </ScrollView>  
       {/*Export Button*/}
       {/* <TouchableOpacity onPress={() => console.log(JSON.stringify(productItems))}> */}
-      <TouchableOpacity onPress={() => publishMessage(productItems)}>
-        <View>
-          <Text>send</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={{flexDirection:'row', alignContent:'space-between'}}>
       <TouchableOpacity onPress={() => navigation.navigate('QR')}>
         <View style={styles.exportButton}>
-          
-          <Text>Export</Text>
-          
+          <Text>Connect to GNA</Text>
         </View>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => publishMessage(productItems)}>
+        <View style={styles.exportButton}>
+          <Text>Send List</Text>
+        </View>
+      </TouchableOpacity>
+      
+      </View>
+    </View>
     </View>
   );
 }
@@ -115,8 +187,6 @@ function QRScreen({route, navigation}) {
     console.log("data from handle",data);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     // navigation.navigate("Home",data);    
-    
-    
     
   };
   
@@ -145,15 +215,25 @@ function QRScreen({route, navigation}) {
 const Stack = createNativeStackNavigator();
 
 function App() {
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator initialRouteName="Home" screenOptions={{headerTitleAlign: 'center'}}>
+        <Stack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={({ navigation }) => ({
+            title:"GNA",
+            headerRight: () => <Header navigation={navigation} />,
+            fontSize:30
+          })}
+        />
         <Stack.Screen name="QR" component={QRScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 export default App;
 
 const styles = StyleSheet.create({
@@ -172,6 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop:70,
+    marginLeft:10
   },
 
   items: {
@@ -180,14 +261,14 @@ const styles = StyleSheet.create({
 
   exportButton:{
     backgroundColor: '#4abf0f',
-    width:'50%',
+    width:150,
     alignItems:'center',
-    paddingHorizontal:20,
-    margin:20,
-    height:40,
+    paddingHorizontal:10,
+    marginLeft:30,
+    marginTop: 500,
+    height:100,
     justifyContent:'center',
     borderRadius: 20,
-    marginLeft:90
   },
   searchWrapper:{
     position:'absolute',
@@ -213,10 +294,10 @@ const styles = StyleSheet.create({
     borderWidth:1,
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'#888',
+    backgroundColor:'#4abf0f',
   },
   addItem:{
-
+    // backgroundColor:''
   },
   container:{
     flex: 1,
