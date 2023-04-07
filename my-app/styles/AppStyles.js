@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingTop: 10,
     paddingLeft: 10,
-    borderWidth: 2,
+    // borderWidth: 2,
   },
 
   items: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "red",
+    // borderColor: "red",
   },
   searchWrapper: {
     position: "absolute",
