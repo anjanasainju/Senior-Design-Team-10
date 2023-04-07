@@ -45,14 +45,19 @@ function HomeScreen({ route, navigation }) {
 
   const handleAddProduct = () => {
     Keyboard.dismiss();
-    if (database.includes(input)) {
-      setProductItems([
-        ...productItems,
-        input,
-      ]); /*Add initial items plus new one in the array */
-      setInput("");
+    if (database.includes(product)) {
+      if (productItems.includes(product)) {
+        alert("Item already exist in the list");
+      } else {
+        setProductItems([
+          ...productItems,
+          product,
+        ]); /*Add initial items plus new one in the array */
+        setProduct(null);
+      }
+    } else {
+      alert("No such product exist. Choose from the list.");
     }
-    setProduct(null);
   };
 
   const publishMessage = (productItems) => {
@@ -70,7 +75,6 @@ function HomeScreen({ route, navigation }) {
     client.send(message);
   };
 
-  const [input, setInput] = useState();
   const [data, setData] = useState();
   const [ItemSelected, setItemSelected] = useState(false);
   const getItemText = (item) => {
@@ -93,7 +97,7 @@ function HomeScreen({ route, navigation }) {
     );
   };
   const onChangeText = (text) => {
-    setInput(text);
+    setProduct(text);
     setItemSelected(false);
 
     if (text.length == 0) return setData([]);
@@ -103,32 +107,22 @@ function HomeScreen({ route, navigation }) {
     console.log(result);
   };
   const checkDatabase = (item) => {
-    return item.includes(input);
+    return item.includes(product);
   };
   const selectItem = (item) => {
-    setInput(item);
+    setProduct(item);
     setItemSelected(true);
   };
 
   return (
     <View style={styles.background}>
       {/*starts the list from search bar*/}
-
-      {/* <View style={styles.listWrapper}>
-      <View>
-        <KeyboardAvoidingView style={styles.searchWrapper}>
-        <TextInput
-          style={styles.inputbox}
-          placeholder ="Search..."
-          value={product}
-          onChangeText={text =>setProduct(text)}
-        /> */}
       <View
         style={{
           flexDirection: "row",
           marginTop: 10,
-          borderWidth: 2,
-          borderColor: "blue",
+          // borderWidth: 2,
+          // borderColor: "blue",
         }}
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -136,7 +130,7 @@ function HomeScreen({ route, navigation }) {
             {/* <Text style = {{marginLeft:12, marginVertical:5, fontSize:12}}>Search</Text> */}
             <TextInput
               placeholder="Search"
-              value={input}
+              value={product}
               onChangeText={onChangeText}
               style={{
                 height: 50,
@@ -184,13 +178,13 @@ function HomeScreen({ route, navigation }) {
           bottom: 10,
           right: 0,
           zIndex: -90,
-          borderWidth: 5,
+          // borderWidth: 5,
         }}
       >
         <View
           style={{
-            borderWidth: 2,
-            borderColor: "pink",
+            // borderWidth: 2,
+            // borderColor: "pink",
             position: "absolute",
             top: 0,
             bottom: 100,
@@ -203,7 +197,9 @@ function HomeScreen({ route, navigation }) {
           <ScrollView showsVerticalScrollIndicator={true}>
             <View style={styles.items}>
               {productItems.map((item, index) => {
-                return <Product key={index} text={item} />;
+                return (
+                  <Product key={index} text={item} products={productItems} />
+                );
               })}
             </View>
           </ScrollView>
@@ -213,7 +209,7 @@ function HomeScreen({ route, navigation }) {
         <View
           style={{
             flexDirection: "row",
-            borderWidth: 1,
+            // borderWidth: 1,
             position: "absolute",
 
             bottom: 10,
