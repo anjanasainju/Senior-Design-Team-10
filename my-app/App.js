@@ -36,13 +36,34 @@ const database = [
   "Apples",
   "Applesauce",
   "Rice Cakes",
+  "Red Wine",
+  "White Wine",
+  "Mushrooms",
+  "Mustard",
+  "Potato Chips",
+  "Tortilla Chips",
+  "Soy Milk",
 ];
 var topic;
+
+const publishMessage = (productItems) => {
+  // const topic = route.params;
+
+  {
+    /*JSON.stringify makes list of the array */
+  }
+  console.log(productItems);
+  // console.log(JSON.stringify(productItems));
+  message = new Paho.Message(JSON.stringify(productItems));
+  // message.destinationName = "calvin-gna-test";
+  console.log("topic", topic);
+  message.destinationName = topic;
+  client.send(message);
+};
 
 function HomeScreen({ route, navigation }) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
-
   const handleAddProduct = () => {
     Keyboard.dismiss();
     if (database.includes(product)) {
@@ -60,21 +81,6 @@ function HomeScreen({ route, navigation }) {
     }
   };
 
-  const publishMessage = (productItems) => {
-    // const topic = route.params;
-
-    {
-      /*JSON.stringify makes list of the array */
-    }
-    console.log(productItems);
-    // console.log(JSON.stringify(productItems));
-    message = new Paho.Message(JSON.stringify(productItems));
-    // message.destinationName = "calvin-gna-test";
-    console.log("topic", topic);
-    message.destinationName = topic;
-    client.send(message);
-  };
-
   const [data, setData] = useState();
   const [ItemSelected, setItemSelected] = useState(false);
   const getItemText = (item) => {
@@ -87,7 +93,7 @@ function HomeScreen({ route, navigation }) {
             width: 300,
             borderWidth: 1,
             padding: 5,
-            backgroundColor: "green",
+            backgroundColor: "gray",
             elevation: 2,
           }}
         >
@@ -218,14 +224,16 @@ function HomeScreen({ route, navigation }) {
             justifyContent: "space-around",
           }}
         >
-          <TouchableOpacity
-            onPress={() => navigation.navigate("QR")}
+          {/* <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("QR", { products: productItems })
+            }
             style={styles.exportButton}
-          >
-            {/* <View style={styles.exportButton}> */}
-            <Text>Connect to GNA</Text>
-            {/* </View> */}
-          </TouchableOpacity>
+          > */}
+          {/* <View style={styles.exportButton}> */}
+          {/* <Text>Connect to GNA</Text> */}
+          {/* </View> */}
+          {/* </TouchableOpacity> */}
 
           <TouchableOpacity onPress={() => publishMessage(productItems)}>
             <View style={styles.exportButton}>
@@ -241,7 +249,9 @@ function HomeScreen({ route, navigation }) {
 function QRScreen({ route, navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  // const products = route.params;
   // const [data, setData] = useState("");
+  // console.log("Products:", products);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -257,8 +267,10 @@ function QRScreen({ route, navigation }) {
     // setData(data);
     topic = data;
     console.log("data from handle", data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    // navigation.navigate("Home",data);
+    alert(`Conected to GNA!`);
+    navigation.navigate("Home");
+    // publishMessage(products.products);
+    // alert(`${data} has been published!`);
   };
 
   if (hasPermission === null) {
@@ -299,7 +311,8 @@ function App() {
           component={HomeScreen}
           options={({ navigation }) => ({
             title: "GNA",
-            headerRight: () => <Header navigation={navigation} />,
+            header: () => <Header navigation={navigation} />,
+            // position: "absolute",
             fontSize: 30,
           })}
         />
