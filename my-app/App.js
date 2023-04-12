@@ -224,16 +224,16 @@ function HomeScreen({ route, navigation }) {
             justifyContent: "space-around",
           }}
         >
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() =>
               navigation.navigate("QR", { products: productItems })
             }
             style={styles.exportButton}
-          > */}
-          {/* <View style={styles.exportButton}> */}
-          {/* <Text>Connect to GNA</Text> */}
-          {/* </View> */}
-          {/* </TouchableOpacity> */}
+          >
+            <View style={styles.exportButton}>
+              <Text>Connect to GNA</Text>
+            </View>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={() => publishMessage(productItems)}>
             <View style={styles.exportButton}>
@@ -249,9 +249,9 @@ function HomeScreen({ route, navigation }) {
 function QRScreen({ route, navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  // const products = route.params;
+  const products = route.params;
   // const [data, setData] = useState("");
-  // console.log("Products:", products);
+  console.log("Products:", products.products);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -262,6 +262,22 @@ function QRScreen({ route, navigation }) {
     getBarCodeScannerPermissions();
   }, []);
 
+  const publishMessage = (productItems) => {
+    // const topic = route.params;
+
+    {
+      /*JSON.stringify makes list of the array */
+    }
+    console.log("Products:", productItems.products);
+    // console.log(JSON.stringify(productItems));
+    var messageewww = new Paho.Message(JSON.stringify(productItems));
+    console.log("Messagewwee", messageewww);
+
+    // message.destinationName = "calvin-gna-test";
+    console.log("topic", topic);
+    messageewww.destinationName = topic;
+    client.send(messageewww);
+  };
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     // setData(data);
@@ -269,7 +285,8 @@ function QRScreen({ route, navigation }) {
     console.log("data from handle", data);
     alert(`Conected to GNA!`);
     navigation.navigate("Home");
-    // publishMessage(products.products);
+    console.log("Products:", products);
+    publishMessage(products);
     // alert(`${data} has been published!`);
   };
 
@@ -279,6 +296,9 @@ function QRScreen({ route, navigation }) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+  // if (scanned == true) {
+  //   publishMessage(productItems);
+  // }
 
   return (
     // <View>
@@ -311,7 +331,7 @@ function App() {
           component={HomeScreen}
           options={({ navigation }) => ({
             title: "GNA",
-            header: () => <Header navigation={navigation} />,
+            headerRight: () => <Header navigation={navigation} />,
             // position: "absolute",
             fontSize: 30,
           })}
