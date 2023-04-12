@@ -4,9 +4,9 @@ import { TouchableOpacity, View, Text, SafeAreaView } from "react-native";
 
 export default function Header({ navigation }) {
   return (
-    <View style={{ flexDirection: "row", height: 80, top: 10 }}>
-      {/* <SafeAreaView> */}
-      <TouchableOpacity
+    // <View style={{ flexDirection: "row", height: 80, top: 10 }}>
+    <SafeAreaView>
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate("QR")}
         style={{
           backgroundColor: "#4abf0f",
@@ -26,16 +26,8 @@ export default function Header({ navigation }) {
         >
           Connect to GNA
         </Text>
-      </TouchableOpacity>
-      <Text style={{ position: "absolute", top: 30, right: 150, fontSize: 25 }}>
-        GNA
-      </Text>
-      <Ionicons
-        name="help-circle-outline"
-        style={{ position: "absolute", margin: 20, right: 0, top: 10 }}
-        size={33}
-      />
-      {/* </SafeAreaView> */}
-    </View>
+      </TouchableOpacity> */}
+      <Ionicons name="help-circle-outline" size={33} />
+    </SafeAreaView>
   );
 }
