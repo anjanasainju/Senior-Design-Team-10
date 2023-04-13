@@ -27,7 +27,9 @@ export default function Header({ navigation }) {
           Connect to GNA
         </Text>
       </TouchableOpacity> */}
-      <Ionicons name="help-circle-outline" size={33} />
+      <TouchableOpacity onPress={() => navigation.navigate("Help")}>
+        <Ionicons name="help-circle-outline" size={33} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

@@ -22,6 +22,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Header from "./header";
 import styles from "./styles/AppStyles";
+import HelpScreen from "./help";
 
 //NEED TO WORK ON SENDING PARAM data (topic) from QR to publishMessage without changing screens
 client = new Paho.Client("test.mosquitto.org", Number(8080), "G_NA");
@@ -332,6 +333,7 @@ function App() {
           })}
         />
         <Stack.Screen name="Scan QR" component={QRScreen} />
+        <Stack.Screen name="Help" component={HelpScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
