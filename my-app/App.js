@@ -46,20 +46,20 @@ const database = [
 ];
 var topic;
 
-const publishMessage = (productItems) => {
-  // const topic = route.params;
+// const publishMessage = (productItems) => {
+//   // const topic = route.params;
 
-  {
-    /*JSON.stringify makes list of the array */
-  }
-  console.log(productItems);
-  // console.log(JSON.stringify(productItems));
-  message = new Paho.Message(JSON.stringify(productItems));
-  // message.destinationName = "calvin-gna-test";
-  console.log("topic", topic);
-  message.destinationName = topic;
-  client.send(message);
-};
+//   {
+//     /*JSON.stringify makes list of the array */
+//   }
+//   console.log(productItems);
+//   // console.log(JSON.stringify(productItems));
+//   message = new Paho.Message(JSON.stringify(productItems));
+//   // message.destinationName = "calvin-gna-test";
+//   console.log("topic", topic);
+//   message.destinationName = topic;
+//   client.send(message);
+// };
 
 function HomeScreen({ route, navigation }) {
   const [product, setProduct] = useState();
@@ -88,16 +88,18 @@ function HomeScreen({ route, navigation }) {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View
           style={{
-            marginLeft: 15,
+            marginLeft: 12,
             flexShrink: 1,
             width: 300,
             borderWidth: 1,
             padding: 5,
+            height: 50,
             backgroundColor: "gray",
             elevation: 2,
+            opacity: 1,
           }}
         >
-          <Text>{item}</Text>
+          <Text style={{ marginTop: 10 }}>{item}</Text>
         </View>
       </View>
     );
@@ -226,20 +228,20 @@ function HomeScreen({ route, navigation }) {
         >
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("QR", { products: productItems })
+              navigation.navigate("Scan QR", { products: productItems })
             }
             style={styles.exportButton}
           >
             <View style={styles.exportButton}>
-              <Text>Connect to GNA</Text>
+              <Text>Send list to GNA</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => publishMessage(productItems)}>
+          {/* <TouchableOpacity onPress={() => publishMessage(productItems)}>
             <View style={styles.exportButton}>
               <Text>Send List</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </View>
@@ -251,7 +253,7 @@ function QRScreen({ route, navigation }) {
   const [scanned, setScanned] = useState(false);
   const products = route.params;
   // const [data, setData] = useState("");
-  console.log("Products:", products.products);
+  // console.log("Products:", products.products);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -263,29 +265,27 @@ function QRScreen({ route, navigation }) {
   }, []);
 
   const publishMessage = (productItems) => {
-    // const topic = route.params;
-
     {
       /*JSON.stringify makes list of the array */
     }
     console.log("Products:", productItems.products);
     // console.log(JSON.stringify(productItems));
-    var messageewww = new Paho.Message(JSON.stringify(productItems));
-    console.log("Messagewwee", messageewww);
+    var message = new Paho.Message(JSON.stringify(productItems));
+    // console.log("Message", message);
 
     // message.destinationName = "calvin-gna-test";
     console.log("topic", topic);
-    messageewww.destinationName = topic;
-    client.send(messageewww);
+    message.destinationName = topic;
+    client.send(message);
   };
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     // setData(data);
     topic = data;
     console.log("data from handle", data);
-    alert(`Conected to GNA!`);
+    alert(`List sent to GNA!`);
     navigation.navigate("Home");
-    console.log("Products:", products);
+    // console.log("Products:", products);
     publishMessage(products);
     // alert(`${data} has been published!`);
   };
@@ -301,10 +301,6 @@ function QRScreen({ route, navigation }) {
   // }
 
   return (
-    // <View>
-    // <View style={styles.container}>
-    //   <Text>Scan the QR code on the cart to send your list</Text>
-    // </View>
     <View style={styles.container}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -314,7 +310,6 @@ function QRScreen({ route, navigation }) {
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
     </View>
-    // </View>
   );
 }
 const Stack = createNativeStackNavigator();
@@ -336,7 +331,7 @@ function App() {
             fontSize: 30,
           })}
         />
-        <Stack.Screen name="QR" component={QRScreen} />
+        <Stack.Screen name="Scan QR" component={QRScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

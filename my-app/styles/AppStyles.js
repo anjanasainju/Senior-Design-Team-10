@@ -69,9 +69,14 @@ const styles = StyleSheet.create({
     // backgroundColor:''
   },
   container: {
-    flex: 1,
+    // flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    left: 5,
+    right: 5,
+    top: -50,
+    bottom: 5,
+    position: "absolute",
     // height: 1000,
     // width: 300
   },
