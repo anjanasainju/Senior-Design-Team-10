@@ -14,14 +14,14 @@ const Product = (props) => {
       <View style={styles.itemLeft}>
         <Text style={styles.itemText}>{props.text}</Text>
       </View>
-      <View style={styles.itemRight}>
+      <TouchableOpacity style={styles.itemRight}>
         <Ionicons
           name="trash-outline"
           size={28}
           color="#f0493a"
           //   onPress={() => deleteProducts()}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   itemLeft: {
-    flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
   },
@@ -49,9 +48,7 @@ const styles = StyleSheet.create({
     color: "#054a0c",
     fontSize: 15,
   },
-  itemRight: {
-    flexDirection: "row",
-  },
+  itemRight: {},
   quanitityWrapper: {
     width: 24,
     height: 24,

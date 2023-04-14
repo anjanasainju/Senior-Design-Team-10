@@ -19,12 +19,11 @@ import Paho from "paho-mqtt";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import Header from "./header";
 import styles from "./styles/AppStyles";
+import Header from "./header";
 import HelpScreen from "./help";
 import QRScreen from "./qrscreen";
 
-//NEED TO WORK ON SENDING PARAM data (topic) from QR to publishMessage without changing screens
 client = new Paho.Client("test.mosquitto.org", Number(8080), "G_NA");
 
 client.connect();
@@ -45,26 +44,11 @@ client.connect();
 //   "Tortilla Chips",
 //   "Soy Milk",
 // ];
-var topic;
-
-// const publishMessage = (productItems) => {
-//   // const topic = route.params;
-
-//   {
-//     /*JSON.stringify makes list of the array */
-//   }
-//   console.log(productItems);
-//   // console.log(JSON.stringify(productItems));
-//   message = new Paho.Message(JSON.stringify(productItems));
-//   // message.destinationName = "calvin-gna-test";
-//   console.log("topic", topic);
-//   message.destinationName = topic;
-//   client.send(message);
-// };
 
 function HomeScreen({ route, navigation }) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
+
   const handleAddProduct = () => {
     Keyboard.dismiss();
     if (database.includes(product)) {
@@ -75,8 +59,9 @@ function HomeScreen({ route, navigation }) {
           ...productItems,
           product,
         ]); /*Add initial items plus new one in the array */
-        setProduct(null);
+        // setProduct(null);
       }
+      setProduct(null);
     } else {
       alert("No such product exist. Choose from the list.");
     }
@@ -84,6 +69,8 @@ function HomeScreen({ route, navigation }) {
 
   const [data, setData] = useState();
   const [ItemSelected, setItemSelected] = useState(false);
+
+  //shows dropdown options
   const getItemText = (item) => {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -107,6 +94,7 @@ function HomeScreen({ route, navigation }) {
     return item.includes(product);
   };
   const selectItem = (item) => {
+    Keyboard.dismiss();
     setProduct(item);
     setItemSelected(true);
   };
@@ -122,31 +110,34 @@ function HomeScreen({ route, navigation }) {
           // borderColor: "blue",
         }}
       >
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <SafeAreaView>
-            <TextInput
-              placeholder="Search..."
-              value={product}
-              onChangeText={onChangeText}
-              style={styles.inputbox}
-            />
+        {/* <TouchableWithoutFeedback> */}
+        <SafeAreaView>
+          <TextInput
+            placeholder="Search..."
+            value={product}
+            onChangeText={onChangeText}
+            style={styles.inputbox}
+          />
 
-            <FlatList
-              data={data}
-              style={{ zIndex: 99 }}
-              renderItem={({ item, index }) =>
-                !ItemSelected && (
-                  <Pressable
-                    // onPress={() => alert("Item" + item)}
-                    onPress={() => selectItem(item)}
-                  >
-                    {getItemText(item)}
-                  </Pressable>
-                )
-              }
-            ></FlatList>
-          </SafeAreaView>
-        </TouchableWithoutFeedback>
+          <FlatList
+            data={data}
+            style={{ zIndex: 99 }}
+            renderItem={({ item, index }) =>
+              !ItemSelected && (
+                <Pressable
+                  // onPress={() => alert("Item" + item)}
+                  onPress={() => {
+                    selectItem(item);
+                    Keyboard.dismiss();
+                  }}
+                >
+                  {getItemText(item)}
+                </Pressable>
+              )
+            }
+          ></FlatList>
+        </SafeAreaView>
+        {/* </TouchableWithoutFeedback> */}
 
         <TouchableOpacity onPress={() => handleAddProduct()}>
           <View style={styles.addItemWrapper}>
