@@ -8,17 +8,23 @@ export default function Header({ navigation }) {
       <TouchableOpacity onPress={() => navigation.navigate("Help")}>
         <View
           style={{
-            backgroundColor: "#d1e8d3",
+            // backgroundColor: "#d1e8d3",
             borderRadius: 40,
-            height: 40,
-            width: 40,
-            justifyContent: "center",
+            // padding: 20,
+            // justifyContent: "center",
+            // alignItems: "center",
           }}
         >
           <Ionicons
             name="help-circle-outline"
             size={40}
-            style={{ color: "#3bb34d" }}
+            style={{
+              color: "#3bb34d",
+              backgroundColor: "#d1e8d3",
+              textAlign: "center",
+              lineHeight: 40,
+              borderRadius: 30,
+            }}
           />
         </View>
       </TouchableOpacity>

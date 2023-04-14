@@ -205,6 +205,7 @@ function App() {
               fontWeight: "bold",
               fontSize: 25,
               fontFamily: "Roboto",
+              color: "#054a0c",
             },
             headerRight: () => (
               <Header
@@ -228,6 +229,7 @@ function App() {
               fontWeight: "bold",
               fontSize: 25,
               fontFamily: "Roboto",
+              color: "#054a0c",
             },
             headerRight: () => (
               <Header
@@ -251,6 +253,7 @@ function App() {
               fontWeight: "bold",
               fontSize: 25,
               fontFamily: "Roboto",
+              color: "#054a0c",
             },
           })}
         />

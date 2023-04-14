@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     borderColor: "#156e1f",
   },
   sendButtonText: {
-    color: "#156e1f",
+    color: "#054a0c",
     fontWeight: "500",
     fontSize: 17,
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 15,
     height: 50,
     marginHorizontal: 12,
-    borderRadius: 5,
+    borderRadius: 10,
     width: 300,
     backgroundColor: "#edf7ef",
     borderColor: "#97d19e",
