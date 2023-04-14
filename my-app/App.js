@@ -28,27 +28,11 @@ client = new Paho.Client("test.mosquitto.org", Number(8080), "G_NA");
 
 client.connect();
 
-// const database = [
-//   "Milk",
-//   "Pasta",
-//   "Rice",
-//   "Eggs",
-//   "Apples",
-//   "Applesauce",
-//   "Rice Cakes",
-//   "Red Wine",
-//   "White Wine",
-//   "Mushrooms",
-//   "Mustard",
-//   "Potato Chips",
-//   "Tortilla Chips",
-//   "Soy Milk",
-// ];
-
 function HomeScreen({ route, navigation }) {
   const [product, setProduct] = useState();
   const [productItems, setProductItems] = useState([]);
 
+  //Add grocery items to the productItems list
   const handleAddProduct = () => {
     Keyboard.dismiss();
     if (database.includes(product)) {
@@ -65,6 +49,20 @@ function HomeScreen({ route, navigation }) {
     } else {
       alert("No such product exist. Choose from the list.");
     }
+  };
+
+  //Delete specific item from the productItems list
+  //Making a copy newList and delete from it and setProductItems to whatever is in newList
+  const handleDeleteProduct = (item) => {
+    // console.log("Chosen Item ", item);
+    var newList = productItems;
+    var index = newList.indexOf(item);
+    // console.log("New List:", newList);
+    // console.log("Index", index);
+    newList.splice(index, 1);
+    // console.log("After delete", newList);
+    setProductItems([...newList]);
+    // console.log("ProductItems: ", productItems);
   };
 
   const [data, setData] = useState();
@@ -158,7 +156,11 @@ function HomeScreen({ route, navigation }) {
             <View style={styles.items}>
               {productItems.map((item, index) => {
                 return (
-                  <Product key={index} text={item} products={productItems} />
+                  <Product
+                    key={index}
+                    text={item}
+                    deletefunction={handleDeleteProduct}
+                  />
                 );
               })}
             </View>

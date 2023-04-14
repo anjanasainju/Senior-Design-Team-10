@@ -2,19 +2,18 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-// const deleteProducts = (index) => {
-//   prod.splice(index, 1);
-// };
 const Product = (props) => {
-  //   const prod = props.products;
-  //   console.log(prod);
-
+  //get a deletefunction prop from App.js
+  // send the product name for which trash ico has been pressed
+  const handleDeleteItem = () => {
+    props.deletefunction(props.text);
+  };
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <Text style={styles.itemText}>{props.text}</Text>
       </View>
-      <TouchableOpacity style={styles.itemRight}>
+      <TouchableOpacity style={styles.itemRight} onPress={handleDeleteItem}>
         <Ionicons
           name="trash-outline"
           size={28}
