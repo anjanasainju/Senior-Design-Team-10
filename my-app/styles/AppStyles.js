@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#E8EAED",
+    backgroundColor: "#cfe8d2",
     // alignContent: "center",
   },
 
@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingTop: 10,
     paddingLeft: 10,
+    marginTop: 30,
+    color: "#054a0c",
     // borderWidth: 2,
   },
 
@@ -26,18 +28,18 @@ const styles = StyleSheet.create({
   },
 
   exportButton: {
-    backgroundColor: "#4abf0f",
+    backgroundColor: "#3bb34d",
     width: 150,
     alignItems: "center",
     paddingHorizontal: 10,
     // marginLeft: 30,
     // bottom:90,
     // marginTop: 500,
-    height: 100,
+    height: 80,
     justifyContent: "center",
     borderRadius: 20,
-    borderWidth: 1,
-    // borderColor: "red",
+    borderWidth: 2,
+    borderColor: "#156e1f",
   },
   searchWrapper: {
     position: "absolute",
@@ -45,28 +47,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 100,
   },
+
   inputbox: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#999",
-    borderColor: "black",
-    borderWidth: 1,
-    width: 290,
-    borderRadius: 40,
-    // marginBottom
+    padding: 15,
+    height: 50,
+    marginHorizontal: 12,
+    borderRadius: 5,
+    width: 300,
+    backgroundColor: "#edf7ef",
+    borderColor: "#97d19e",
+    borderWidth: 2,
+    fontSize: 17,
   },
+
   addItemWrapper: {
     width: 50,
     height: 50,
     borderRadius: 60,
-    borderWidth: 1,
+    borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#4abf0f",
+    backgroundColor: "#3bb34d",
+    borderColor: "#156e1f",
   },
   addItem: {
-    // backgroundColor:''
+    fontSize: 30,
+    color: "#156e1f",
   },
   container: {
     // flex: 1,
@@ -79,6 +87,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     // height: 1000,
     // width: 300
+  },
+  dropdownOptions: {
+    marginLeft: 12,
+    flexShrink: 1,
+    width: 300,
+    borderWidth: 1,
+    padding: 5,
+    height: 50,
+    marginLeft: 13,
+    backgroundColor: "#a5d4ab",
+    borderRadius: 5,
+    borderTopWidth: 0,
+    borderColor: "#156e1f",
+    elevation: 2,
+    opacity: 1,
   },
 });
 

@@ -18,7 +18,7 @@ const Product = (props) => {
         <Ionicons
           name="trash-outline"
           size={28}
-          color="red"
+          color="#f0493a"
           //   onPress={() => deleteProducts()}
         />
       </View>
@@ -28,7 +28,8 @@ const Product = (props) => {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#e9f2ea",
+    // backgroundColor: "#7cc485",
     padding: 15,
     borderRadius: 10,
     flexDirection: "row",
@@ -45,6 +46,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     maxWidth: "100%",
+    color: "#054a0c",
+    fontSize: 15,
   },
   itemRight: {
     flexDirection: "row",
