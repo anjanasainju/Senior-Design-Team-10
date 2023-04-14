@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     width: 380,
   },
 
-  exportButton: {
+  sendButton: {
     backgroundColor: "#3bb34d",
     width: 150,
     alignItems: "center",
@@ -40,6 +40,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 2,
     borderColor: "#156e1f",
+  },
+  sendButtonText: {
+    color: "#156e1f",
+    fontWeight: "500",
+    fontSize: 17,
   },
   searchWrapper: {
     position: "absolute",
@@ -102,6 +107,28 @@ const styles = StyleSheet.create({
     borderColor: "#156e1f",
     elevation: 2,
     opacity: 1,
+  },
+  groceryList: {
+    // borderWidth: 2,
+    // borderColor: "pink",
+    position: "absolute",
+    top: 0,
+    bottom: 100,
+  },
+  listAndButton: {
+    position: "absolute",
+    top: 60,
+    left: 0,
+    bottom: 10,
+    right: 0,
+    zIndex: -90,
+    // borderWidth: 5,
+  },
+  sendButtonPosition: {
+    position: "absolute",
+    bottom: 10,
+    alignSelf: "center",
+    justifyContent: "space-around",
   },
 });
 

@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import Product from "./components/Product";
 import Paho from "paho-mqtt";
+import { BarCodeScanner } from "expo-barcode-scanner";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Header from "./header";
@@ -123,7 +124,6 @@ function HomeScreen({ route, navigation }) {
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <SafeAreaView>
-            {/* <Text style = {{marginLeft:12, marginVertical:5, fontSize:12}}>Search</Text> */}
             <TextInput
               placeholder="Search..."
               value={product}
@@ -158,31 +158,11 @@ function HomeScreen({ route, navigation }) {
       {/* ------------------------------------------------------------------------------ */}
       {/* </KeyboardAvoidingView> */}
       {/*<Ionicons name="search-outline" size={20} color={"#fff"} justify />*/}
-      {/* </View> */}
-      <View
-        style={{
-          position: "absolute",
-          top: 60,
-          left: 0,
-          bottom: 10,
-          right: 0,
-          zIndex: -90,
-          // borderWidth: 5,
-        }}
-      >
-        <View
-          style={{
-            // borderWidth: 2,
-            // borderColor: "pink",
-            position: "absolute",
-            top: 0,
-            bottom: 100,
-          }}
-        >
+      <View style={styles.listAndButton}>
+        <View style={styles.groceryList}>
           <Text style={styles.sectionTitle}> Grocery Items </Text>
           {/*Grocery list items start*/}
 
-          {/* </View> */}
           <ScrollView showsVerticalScrollIndicator={true}>
             <View style={styles.items}>
               {productItems.map((item, index) => {
@@ -193,110 +173,22 @@ function HomeScreen({ route, navigation }) {
             </View>
           </ScrollView>
         </View>
-        {/*Export Button*/}
-        {/* <TouchableOpacity onPress={() => console.log(JSON.stringify(productItems))}> */}
-        <View
-          style={{
-            flexDirection: "row",
-            // borderWidth: 1,
-            position: "absolute",
-
-            bottom: 10,
-            left: 0,
-            right: 0,
-            justifyContent: "space-around",
-          }}
-        >
+        {/*Send Button*/}
+        <View style={styles.sendButtonPosition}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("Scan QR", { products: productItems })
             }
-            style={styles.exportButton}
+            style={styles.sendButton}
           >
-            <View style={styles.exportButton}>
-              <Text
-                style={{ color: "#156e1f", fontWeight: "500", fontSize: 17 }}
-              >
-                Send List
-              </Text>
-            </View>
+            <Text style={styles.sendButtonText}>Send List</Text>
           </TouchableOpacity>
-
-          {/* <TouchableOpacity onPress={() => publishMessage(productItems)}>
-            <View style={styles.exportButton}>
-              <Text>Send List</Text>
-            </View>
-          </TouchableOpacity> */}
         </View>
       </View>
     </View>
   );
 }
 
-// function QRScreen({ route, navigation }) {
-//   const [hasPermission, setHasPermission] = useState(null);
-//   const [scanned, setScanned] = useState(false);
-//   const products = route.params;
-//   // const [data, setData] = useState("");
-//   // console.log("Products:", products.products);
-
-//   useEffect(() => {
-//     const getBarCodeScannerPermissions = async () => {
-//       const { status } = await BarCodeScanner.requestPermissionsAsync();
-//       setHasPermission(status === "granted");
-//     };
-
-//     getBarCodeScannerPermissions();
-//   }, []);
-
-//   const publishMessage = (productItems) => {
-//     {
-//       /*JSON.stringify makes list of the array */
-//     }
-//     console.log("Products:", productItems.products);
-//     // console.log(JSON.stringify(productItems));
-//     var message = new Paho.Message(JSON.stringify(productItems));
-//     // console.log("Message", message);
-
-//     // message.destinationName = "calvin-gna-test";
-//     console.log("topic", topic);
-//     message.destinationName = topic;
-//     client.send(message);
-//   };
-//   const handleBarCodeScanned = ({ type, data }) => {
-//     setScanned(true);
-//     // setData(data);
-//     topic = data;
-//     console.log("data from handle", data);
-//     alert(`List sent to GNA!`);
-//     navigation.navigate("Home");
-//     // console.log("Products:", products);
-//     publishMessage(products);
-//     // alert(`${data} has been published!`);
-//   };
-
-//   if (hasPermission === null) {
-//     return <Text>Requesting for camera permission</Text>;
-//   }
-//   if (hasPermission === false) {
-//     return <Text>No access to camera</Text>;
-//   }
-//   // if (scanned == true) {
-//   //   publishMessage(productItems);
-//   // }
-
-//   return (
-//     <View style={styles.container}>
-//       <BarCodeScanner
-//         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-//         style={StyleSheet.absoluteFillObject}
-//       />
-//       {scanned && (
-//         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-//       )}
-//     </View>
-//   );
-// }
 const Stack = createNativeStackNavigator();
 
 function App() {
