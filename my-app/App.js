@@ -30,8 +30,12 @@ client.connect();
 
 function HomeScreen({ route, navigation }) {
   const [product, setProduct] = useState();
-  const [productItems, setProductItems] = useState([]);
-
+  const [productItems, setProductItems] = useState([
+    "Rice",
+    "Toothpaste",
+    "Bananas",
+  ]);
+  // const [productItems, setProductItems] = useState([]);
   //Add grocery items to the productItems list
   const handleAddProduct = () => {
     Keyboard.dismiss();
@@ -92,7 +96,7 @@ function HomeScreen({ route, navigation }) {
     return item.includes(product);
   };
   const selectItem = (item) => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     setProduct(item);
     setItemSelected(true);
   };
@@ -115,18 +119,19 @@ function HomeScreen({ route, navigation }) {
             value={product}
             onChangeText={onChangeText}
             style={styles.inputbox}
+            keybo
           />
 
           <FlatList
             data={data}
             style={{ zIndex: 99 }}
+            keyboardShouldPersistTaps="always"
             renderItem={({ item, index }) =>
               !ItemSelected && (
                 <Pressable
                   // onPress={() => alert("Item" + item)}
                   onPress={() => {
                     selectItem(item);
-                    Keyboard.dismiss();
                   }}
                 >
                   {getItemText(item)}
@@ -152,7 +157,10 @@ function HomeScreen({ route, navigation }) {
           <Text style={styles.sectionTitle}> Grocery Items </Text>
           {/*Grocery list items start*/}
 
-          <ScrollView showsVerticalScrollIndicator={true}>
+          <ScrollView
+            showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="always"
+          >
             <View style={styles.items}>
               {productItems.map((item, index) => {
                 return (
